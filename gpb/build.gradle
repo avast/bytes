@@ -1,0 +1,8 @@
+archivesBaseName = 'bytes-gpb'
+
+dependencies {
+    compile project(':core')
+    compile "com.google.protobuf:protobuf-java:$gpbVersion"
+
+    testCompile "junit:junit:$junitVersion"
+}
