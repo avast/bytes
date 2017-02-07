@@ -12,10 +12,12 @@ However, multiple implementations of the `Bytes` interface can be created using 
 Implementations that require third-party dependencies will be separated to their own module, while the core module provides only the API and implementations
 based on Java standard library.
 
-The interface provides methods for reading encapsulated data including random and linear access (`Bytes.byteAt(int)` and `Bytes.newInputStream()` respectively).
-You can also create a limited view of the bytes via `Bytes.view(int, int)` - with the same semantics as `String.substring(int, int)`.
+Features of Bytes include:
+ - reading encapsulated data using random (`Bytes.byteAt(int)`) and linear (`Bytes.newInputStream()`) access
+ - zero copy *substring* views (`Bytes.view(int, int)`)
+ - zero copy concat (`Bytes.concat(otherBytes)`)
+ - utility methods for reading & writing hex strings (`Bytes.copyFromHex(someBytes.toHexString)`)
 
-There is no API for methods like `map` or `flatMap`.
 
 Usage
 -----
