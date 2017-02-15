@@ -1,16 +1,16 @@
 package com.avast.bytes;
 
 public abstract class AbstractBytes implements Bytes {
-    private final int TO_STRING_SIZE_LIMIT = 100;
-    private final String IMPLEMENTATION_CLASS_NAME = this.getClass().getCanonicalName();
+
+    private static final int TO_STRING_SIZE_LIMIT = 100;
 
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        b.append(IMPLEMENTATION_CLASS_NAME).append("(");
+        b.append(implementationClassName()).append("(");
         b.append("size:").append(size()).append(", ");
         b.append("bytes: ");
-        if(size() > TO_STRING_SIZE_LIMIT) {
+        if (size() > TO_STRING_SIZE_LIMIT) {
             b.append(view(0, TO_STRING_SIZE_LIMIT).toHexString()).append("...");
         } else {
             b.append(toHexString());
@@ -64,4 +64,9 @@ public abstract class AbstractBytes implements Bytes {
 
         return h;
     }
+
+    private String implementationClassName() {
+        return this.getClass().getCanonicalName();
+    }
+
 }
