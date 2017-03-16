@@ -17,6 +17,7 @@ Features of Bytes include:
  - zero copy *substring* views (`Bytes.view(int, int)`)
  - zero copy concat (`Bytes.concat(otherBytes)`)
  - utility methods for reading & writing hex strings (`Bytes.copyFromHex(someBytes.toHexString)`)
+ - reading directly from `InputStream` (in some implementations, e.g. `ByteArrayBytes.readFrom(is)` or `ByteArrayBytes.readFrom(is, offset, length)`)
 
 
 Usage
