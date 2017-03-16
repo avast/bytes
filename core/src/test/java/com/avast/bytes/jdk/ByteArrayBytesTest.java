@@ -43,4 +43,17 @@ public class ByteArrayBytesTest extends BytesTestBase {
         assertTrue(bytes instanceof ConcatBytes);
         assertEquals(bigData.size(), bytes.size());
     }
+
+    @Test
+    public void testReadPartFromInputStream() throws IOException {
+        final ByteArrayInputStream is = new ByteArrayInputStream("thisisahelloworldtext".getBytes());
+
+        assertEquals("thisisa", ByteArrayBytes.readFrom(is, 0, 7).toStringUtf8());
+        assertEquals("helloworld", ByteArrayBytes.readFrom(is, 0, 10).toStringUtf8());
+
+        final ByteArrayInputStream is2 = new ByteArrayInputStream("thisisahelloworldtext".getBytes());
+
+        assertEquals("helloworld", ByteArrayBytes.readFrom(is2, 7, 10).toStringUtf8());
+        assertEquals("text", ByteArrayBytes.readFrom(is2, 0, 10).toStringUtf8());
+    }
 }

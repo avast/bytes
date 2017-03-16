@@ -141,7 +141,7 @@ public final class ByteArrayBytes extends AbstractBytes {
     }
 
     public static ByteArrayBytes copyFrom(final byte[] bytes, final int offset,
-                                               final int size) {
+                                          final int size) {
         final byte[] copy = new byte[size];
         System.arraycopy(bytes, offset, copy, 0, size);
         return new ByteArrayBytes(copy);
@@ -199,6 +199,20 @@ public final class ByteArrayBytes extends AbstractBytes {
      */
     public static Bytes readFrom(InputStream stream) throws IOException {
         return StreamReader.readFrom(stream, ByteArrayBytes::newBuilder);
+    }
+
+    /**
+     * Copies all or a subset of bytes from {@code InputStream} to a {@code Bytes}, blocking if necessary until all required bytes are read
+     * through.
+     *
+     * @param stream The source stream, which is read (but not closed).
+     * @param offset Number of bytes to skip from input before copying
+     * @param len    Number of bytes to read (starting from specified offset)
+     * @return A new {@code Bytes} which is made up of read bytes.
+     * @throws IOException IOException is thrown if there is a problem reading the underlying stream.
+     */
+    public static Bytes readFrom(InputStream stream, int offset, int len) throws IOException {
+        return StreamReader.readSliceFrom(stream, offset, len, ByteArrayBytes::newBuilder);
     }
 
     private static final class ByteArrayBuilder extends BuilderStream {

@@ -60,6 +60,19 @@ public class ByteBufferBytesTest extends BytesTestBase {
         assertEquals(bigData.size(), bytes.size());
     }
 
+    @Test
+    public void testReadPartFromInputStream() throws IOException {
+        final ByteArrayInputStream is = new ByteArrayInputStream("thisisahelloworldtext".getBytes());
+
+        assertEquals("thisisa", ByteBufferBytes.readFrom(is, 0, 7).toStringUtf8());
+        assertEquals("helloworld", ByteBufferBytes.readFrom(is, 0, 10).toStringUtf8());
+
+        final ByteArrayInputStream is2 = new ByteArrayInputStream("thisisahelloworldtext".getBytes());
+
+        assertEquals("helloworld", ByteBufferBytes.readFrom(is2, 7, 10).toStringUtf8());
+        assertEquals("text", ByteArrayBytes.readFrom(is2, 0, 10).toStringUtf8());
+    }
+
     private void append(OutputStream out, int count) throws IOException {
         for (int i = 0; i < count; i++) {
             out.write(1);
