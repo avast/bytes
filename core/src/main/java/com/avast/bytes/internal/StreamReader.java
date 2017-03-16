@@ -61,6 +61,42 @@ public class StreamReader {
         return readFrom(streamToDrain, MIN_READ_FROM_CHUNK_SIZE, MAX_READ_FROM_CHUNK_SIZE, builderFactory);
     }
 
+    public static Bytes readSliceFrom(InputStream streamToDrain, int offset, int len, IntFunction<Bytes.BuilderStream> builderFactory) throws IOException {
+        // the implementation is based on commons-io IOUtils.copyLarge
+
+        if (len == 0) {
+            return Bytes.empty();
+        }
+
+        if (offset > 0) {
+            final long skipped = streamToDrain.skip(offset);
+            if (skipped < offset) return Bytes.empty();
+        }
+
+        byte[] readBuffer = new byte[len > 4096 ? 4096 : len];
+
+        final int bufferLength = readBuffer.length;
+        int bytesToRead = bufferLength;
+        if (len > 0 && len < bufferLength) {
+            bytesToRead = len;
+        }
+
+        final Bytes.BuilderStream builder = builderFactory.apply(len);
+
+        int read;
+        long totalRead = 0;
+        while (bytesToRead > 0 && -1 != (read = streamToDrain.read(readBuffer, 0, bytesToRead))) {
+            builder.write(readBuffer, 0, read);
+            totalRead += read;
+            if (len > 0) { // only adjust length if not reading to the end
+                // Note the cast must work because buffer.length is an integer
+                bytesToRead = (int) Math.min(len - totalRead, bufferLength);
+            }
+        }
+
+        return builder.toBytes();
+    }
+
     public static Bytes readFrom(InputStream streamToDrain, int minChunkSize, int maxChunkSize, IntFunction<Bytes.BuilderStream> builderFactory) throws IOException {
         List<Bytes> chunks = new ArrayList<>();
 
