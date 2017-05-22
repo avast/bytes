@@ -123,4 +123,14 @@ public class ConcatBytesTest {
         concatenated.byteAt(concatenated.size());
     }
 
+    @Test
+    public void testEmptyInConcat() throws IOException {
+        Bytes bytes1 = ByteArrayBytes.EMPTY;
+        Bytes bytes2 = ByteArrayBytes.copyFromUtf8(TestString);
+        Bytes concatenated = bytes1.concat(bytes2);
+
+        assertEquals(TestString, concatenated.toStringUtf8());
+        assertEquals(TestString, ByteArrayBytes.readFrom(concatenated.newInputStream()).toStringUtf8());
+    }
+
 }

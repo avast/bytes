@@ -4,11 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Implementation of {@link Bytes} backed by a list of {@link Bytes} instances.
@@ -148,6 +144,11 @@ public final class ConcatBytes extends AbstractBytes {
                 // everything is read already
                 if (readBytes == length) {
                     return -1;
+                }
+
+                if (current.isEmpty()) {
+                    current = queue.poll();
+                    continue;
                 }
 
                 // skipping bytes until we reach globalOffset
