@@ -41,7 +41,7 @@ try (Bytes.BuilderStream builder = ByteBufBytes.newBuilder(message.getSerialized
 }
 ```
 
-...or serialize the message to `ByteString` as usual and wrap it to `ByteStringBytes`.
+...or serialize the message to `ByteString` as usual and wrap it with `ByteStringBytes`.
 
 
 JDK-based implementations
