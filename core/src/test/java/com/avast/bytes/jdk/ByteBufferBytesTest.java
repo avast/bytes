@@ -28,16 +28,18 @@ public class ByteBufferBytesTest extends BytesTestBase {
 
     @Test
     public void testBuilderGrowsExponentially() throws IOException {
-        Bytes.BuilderStream builder = ByteBufferBytes.newBuilder(2);
-        append(builder, 10);
-        assertEquals(16, builder.toBytes().toReadOnlyByteBuffer().capacity());
+        try (Bytes.BuilderStream builder = ByteBufferBytes.newBuilder(2)) {
+            append(builder, 10);
+            assertEquals(16, builder.toBytes().toReadOnlyByteBuffer().capacity());
+        }
     }
 
     @Test
     public void testBuilderDoesNotGrowIfCapacityIsSufficient() throws IOException {
-        Bytes.BuilderStream builder = ByteBufferBytes.newBuilder(4);
-        append(builder, 4);
-        assertEquals(4, builder.toBytes().toReadOnlyByteBuffer().capacity());
+        try (Bytes.BuilderStream builder = ByteBufferBytes.newBuilder(4)) {
+            append(builder, 4);
+            assertEquals(4, builder.toBytes().toReadOnlyByteBuffer().capacity());
+        }
     }
 
     @Test
@@ -55,9 +57,11 @@ public class ByteBufferBytesTest extends BytesTestBase {
             bigData = bigData.concat(bigData);
         }
 
-        Bytes bytes = ByteBufferBytes.readFrom(bigData.newInputStream());
-        assertTrue(bytes instanceof ConcatBytes);
-        assertEquals(bigData.size(), bytes.size());
+        try (InputStream is = bigData.newInputStream()) {
+            Bytes bytes = ByteBufferBytes.readFrom(is);
+            assertTrue(bytes instanceof ConcatBytes);
+            assertEquals(bigData.size(), bytes.size());
+        }
     }
 
     @Test

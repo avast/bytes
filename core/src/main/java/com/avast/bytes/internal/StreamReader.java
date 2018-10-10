@@ -81,20 +81,20 @@ public class StreamReader {
             bytesToRead = len;
         }
 
-        final Bytes.BuilderStream builder = builderFactory.apply(len);
-
-        int read;
-        long totalRead = 0;
-        while (bytesToRead > 0 && -1 != (read = streamToDrain.read(readBuffer, 0, bytesToRead))) {
-            builder.write(readBuffer, 0, read);
-            totalRead += read;
-            if (len > 0) { // only adjust length if not reading to the end
-                // Note the cast must work because buffer.length is an integer
-                bytesToRead = (int) Math.min(len - totalRead, bufferLength);
+        try (final Bytes.BuilderStream builder = builderFactory.apply(len)) {
+            int read;
+            long totalRead = 0;
+            while (bytesToRead > 0 && -1 != (read = streamToDrain.read(readBuffer, 0, bytesToRead))) {
+                builder.write(readBuffer, 0, read);
+                totalRead += read;
+                if (len > 0) { // only adjust length if not reading to the end
+                    // Note the cast must work because buffer.length is an integer
+                    bytesToRead = (int) Math.min(len - totalRead, bufferLength);
+                }
             }
-        }
 
-        return builder.toBytes();
+            return builder.toBytes();
+        }
     }
 
     public static Bytes readFrom(InputStream streamToDrain, int minChunkSize, int maxChunkSize, IntFunction<Bytes.BuilderStream> builderFactory) throws IOException {
@@ -149,9 +149,10 @@ public class StreamReader {
         if (bytesRead == 0) {
             return null;
         } else {
-            final Bytes.BuilderStream builder = builderFactory.apply(bytesRead);
-            builder.write(buffer, 0, bytesRead);
-            return builder.toBytes();
+            try (final Bytes.BuilderStream builder = builderFactory.apply(bytesRead)) {
+                builder.write(buffer, 0, bytesRead);
+                return builder.toBytes();
+            }
         }
     }
 

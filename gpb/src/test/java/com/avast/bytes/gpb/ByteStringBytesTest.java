@@ -37,12 +37,13 @@ public class ByteStringBytesTest {
     @Test
     public void testInputStream() throws IOException {
         ByteStringBytes b = ByteStringBytes.wrap(TestData);
-        InputStream is = b.newInputStream();
-        byte[] dest = new byte[b.size()];
-        int read = is.read(dest);
-        assertEquals(b.size(), read);
-        assertArrayEquals(TestData.toByteArray(), dest);
-        assertEquals(-1, is.read());
+        try (InputStream is = b.newInputStream()) {
+            byte[] dest = new byte[b.size()];
+            int read = is.read(dest);
+            assertEquals(b.size(), read);
+            assertArrayEquals(TestData.toByteArray(), dest);
+            assertEquals(-1, is.read());
+        }
     }
 
     @Test
