@@ -50,10 +50,9 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Implementation of {@link com.avast.bytes.Bytes} based on an array of bytes.
- *
+ * <p>
  * You create a new instance by using various static copy methods (if you have a different existing bytes representation),
  * or by using {@link #newBuilder(int)} and writing the bytes to the {@link java.io.OutputStream}.
- *
  */
 public final class ByteArrayBytes extends AbstractBytes {
 
@@ -171,6 +170,7 @@ public final class ByteArrayBytes extends AbstractBytes {
 
     /**
      * Creates new builder with the specified initial capacity (more bytes than this capacity can be written however).
+     *
      * @param initialCapacity initial capacity of the builder
      * @return new builder that will create {@link ByteArrayBytes}.
      */
@@ -185,7 +185,7 @@ public final class ByteArrayBytes extends AbstractBytes {
     /**
      * Completely reads the given stream's bytes into a {@code Bytes}, blocking if necessary until all bytes are
      * read through to the end of the stream.
-     *
+     * <p>
      * Convenient if the size of the input stream is not known (otherwise use {@link #newBuilder(int)} with the known size and copy the data).
      *
      * <b>Performance notes:</b> The returned {@code Bytes} is

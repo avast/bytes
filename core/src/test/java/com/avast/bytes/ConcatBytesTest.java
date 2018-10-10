@@ -46,12 +46,13 @@ public class ConcatBytesTest {
         Bytes bytes2 = ByteBufferBytes.copyFrom(ByteBuffer.wrap(TestData));
         Bytes concatenated = bytes1.concat(bytes2);
 
-        InputStream is = concatenated.newInputStream();
-        byte[] dest = new byte[concatenated.size()];
-        int read = is.read(dest);
-        assertEquals(concatenated.size(), read);
-        assertArrayEquals((TestString + TestString).getBytes(US_ASCII), dest);
-        assertEquals(-1, is.read());
+        try (InputStream is = concatenated.newInputStream()) {
+            byte[] dest = new byte[concatenated.size()];
+            int read = is.read(dest);
+            assertEquals(concatenated.size(), read);
+            assertArrayEquals((TestString + TestString).getBytes(US_ASCII), dest);
+            assertEquals(-1, is.read());
+        }
     }
 
     @Test
@@ -74,8 +75,7 @@ public class ConcatBytesTest {
         Bytes viewOfView = v.view(6, 10);
         assertEquals("over", viewOfView.toStringUtf8());
 
-        {
-            InputStream is = viewOfView.newInputStream();
+        try (InputStream is = viewOfView.newInputStream()) {
             byte[] dest = new byte[viewOfView.size()];
             int read = is.read(dest);
             assertEquals(4, read);
@@ -87,8 +87,7 @@ public class ConcatBytesTest {
         Bytes bridgeView = concatenated.view(TestString.indexOf("dog"), dogStart + 6);
         assertEquals("dogThe", bridgeView.toStringUtf8());
 
-        {
-            InputStream is = bridgeView.newInputStream();
+        try (InputStream is = bridgeView.newInputStream()) {
             byte[] dest = new byte[bridgeView.size()];
             int read = is.read(dest);
             assertEquals(6, read);
@@ -130,7 +129,9 @@ public class ConcatBytesTest {
         Bytes concatenated = bytes1.concat(bytes2);
 
         assertEquals(TestString, concatenated.toStringUtf8());
-        assertEquals(TestString, ByteArrayBytes.readFrom(concatenated.newInputStream()).toStringUtf8());
+        try (InputStream is = concatenated.newInputStream()) {
+            assertEquals(TestString, ByteArrayBytes.readFrom(is).toStringUtf8());
+        }
     }
 
 }

@@ -39,9 +39,11 @@ public class ByteArrayBytesTest extends BytesTestBase {
             bigData = bigData.concat(bigData);
         }
 
-        Bytes bytes = ByteArrayBytes.readFrom(bigData.newInputStream());
-        assertTrue(bytes instanceof ConcatBytes);
-        assertEquals(bigData.size(), bytes.size());
+        try (InputStream is = bigData.newInputStream()) {
+            Bytes bytes = ByteArrayBytes.readFrom(is);
+            assertTrue(bytes instanceof ConcatBytes);
+            assertEquals(bigData.size(), bytes.size());
+        }
     }
 
     @Test
