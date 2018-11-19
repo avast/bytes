@@ -3,7 +3,6 @@ package com.avast.bytes;
 import com.avast.bytes.jdk.ByteArrayBytes;
 import com.avast.bytes.jdk.ByteBufferBytes;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -20,6 +19,27 @@ import java.nio.charset.StandardCharsets;
  * or via {@link java.io.InputStream} (see {@link #newInputStream()}.
  */
 public interface Bytes {
+
+    /**
+     * Hidden class with private fields and methods. The only reason for an existence of this class is
+     * that Interfaces in jdk8 don't support private methods and fields
+     */
+    class Hidden {
+        private static final char[] hexCode = "0123456789ABCDEF".toCharArray();
+
+        private static int hexToBin(char ch) {
+            if ('0' <= ch && ch <= '9') {
+                return ch - '0';
+            }
+            if ('A' <= ch && ch <= 'F') {
+                return ch - 'A' + 10;
+            }
+            if ('a' <= ch && ch <= 'f') {
+                return ch - 'a' + 10;
+            }
+            return -1;
+        }
+    }
 
     /**
      * Empty {@link Bytes}.
@@ -82,12 +102,19 @@ public interface Bytes {
 
     /**
      * Converts content of this {@link Bytes} to hex string. It uses data provided by `toByteArray`, which means it probably
-     * create a copy of the data (but that depends on the implementation of the `toByteArray`.
+     * creates a copy of the data (but that depends on the implementation of the `toByteArray`).
      *
+     * Note: Implementation was copied from javax.xml.bind package because the package is no longer supported in jdk11
      * @return hex string representation
      */
     default String toHexString() {
-        return DatatypeConverter.printHexBinary(toByteArray()).toLowerCase();
+        byte[] data = toByteArray();
+        StringBuilder r = new StringBuilder(data.length * 2);
+        for (byte b : data) {
+            r.append(Hidden.hexCode[(b >> 4) & 0xF]);
+            r.append(Hidden.hexCode[(b & 0xF)]);
+        }
+        return r.toString().toLowerCase();
     }
 
     /**
@@ -190,9 +217,24 @@ public interface Bytes {
 
     /**
      * Convenience method for creating {@link Bytes} from HEX {@link String}.
+     * Note: Implementation was copied from javax.xml.bind package because the package is no longer supported in jdk11
      */
     static Bytes copyFromHex(String hexString) {
-        return copyFrom(DatatypeConverter.parseHexBinary(hexString));
+        final int len = hexString.length();
+        // "111" is not a valid hex encoding.
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("hexBinary needs to be even-length: " + hexString);
+        }
+        byte[] out = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            int h = Hidden.hexToBin(hexString.charAt(i));
+            int l = Hidden.hexToBin(hexString.charAt(i + 1));
+            if (h == -1 || l == -1) {
+                throw new IllegalArgumentException("contains illegal character for hexBinary: " + hexString);
+            }
+            out[i / 2] = (byte) (h * 16 + l);
+        }
+        return copyFrom(out);
     }
 
 
