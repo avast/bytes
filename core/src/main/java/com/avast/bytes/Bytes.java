@@ -3,7 +3,6 @@ package com.avast.bytes;
 import com.avast.bytes.jdk.ByteArrayBytes;
 import com.avast.bytes.jdk.ByteBufferBytes;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -82,12 +81,19 @@ public interface Bytes {
 
     /**
      * Converts content of this {@link Bytes} to hex string. It uses data provided by `toByteArray`, which means it probably
-     * create a copy of the data (but that depends on the implementation of the `toByteArray`.
+     * creates a copy of the data (but that depends on the implementation of the `toByteArray`).
      *
+     * Note: Implementation was copied from avast.utils.ByteUtils
      * @return hex string representation
      */
     default String toHexString() {
-        return DatatypeConverter.printHexBinary(toByteArray()).toLowerCase();
+        byte[] arr = toByteArray();
+        char[] result = new char[arr.length * 2];
+        for (int i = 0; i < arr.length; ++i) {
+            result[i * 2] = Constants.HEX_ARRAY[(arr[i] >> 4) & 0xF];
+            result[i * 2 + 1] = Constants.HEX_ARRAY[(arr[i] & 0xF)];
+        }
+        return new String(result);
     }
 
     /**
@@ -192,7 +198,20 @@ public interface Bytes {
      * Convenience method for creating {@link Bytes} from HEX {@link String}.
      */
     static Bytes copyFromHex(String hexString) {
-        return copyFrom(DatatypeConverter.parseHexBinary(hexString));
+        final int length = hexString.length();
+        if (length % 2 != 0) {
+            throw new IllegalArgumentException("HexString needs to be even-length: " + hexString);
+        }
+        byte[] result = new byte[length / 2];
+        for (int i = 0; i < length; i += 2) {
+            int high = Character.getNumericValue(hexString.charAt(i));
+            int low = Character.getNumericValue(hexString.charAt(i + 1));
+            if (high == -1 || low == -1) {
+                throw new IllegalArgumentException("HexString contains illegal characters: " + hexString);
+            }
+            result[i / 2] = (byte) (high * 16 + low);
+        }
+        return copyFrom(result);
     }
 
 
