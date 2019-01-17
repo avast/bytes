@@ -57,6 +57,8 @@ subprojects {
         key = System.getenv('BINTRAY_KEY')
         configurations = ['archives']
 
+        publish = true
+
         pkg {
             repo = 'maven'
             name = 'bytes'
