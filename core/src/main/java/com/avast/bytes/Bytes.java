@@ -202,15 +202,17 @@ public interface Bytes {
         if (length % 2 != 0) {
             throw new IllegalArgumentException("HexString needs to be even-length: " + hexString);
         }
-        byte[] result = new byte[length / 2];
-        for (int i = 0; i < length; i += 2) {
-            int high = Constants.hexToBin(hexString.charAt(i));
-            int low = Constants.hexToBin(hexString.charAt(i + 1));
-            if (high == -1 || low == -1) {
-                throw new IllegalArgumentException("HexString contains illegal characters: " + hexString);
+
+        try {
+            byte[] result = new byte[length / 2];
+            for (int i = 0; i < length; i += 2) {
+                int high = Utils.hexToBin(hexString.charAt(i));
+                int low = Utils.hexToBin(hexString.charAt(i + 1));
+                result[i >> 1] = (byte) ((high << 4) + low);
             }
-            result[i / 2] = (byte) (high * 16 + low);
+            return copyFrom(result);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("HexString contains illegal characters: " + hexString, e);
         }
-        return copyFrom(result);
     }
 }
