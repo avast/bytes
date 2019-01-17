@@ -108,8 +108,25 @@ public abstract class BytesTestBase {
         assertEquals(bytes, Bytes.copyFromHex(bytes.toHexString()));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNonHexCharacterLetter() {
+        // Input data contains 'v' character
+        Bytes.copyFromHex("652B781CC0AFD6D11C42v27A90ADE8074C837E129E29F75B1CE476A3E19A3F3E"); // 'v' is inside
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNonHexCharacterBracket() {
+        // Input data contains '}' character
+        Bytes.copyFromHex("20DB0DCDADB6E64B79E696689FE744B717FFF0FCB88381D252E8}8F8FA60C414"); // '}' is inside
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNonHexCharacterDot() {
+        // Input data contains '}' character
+        Bytes.copyFromHex("20DB0DCDADB6E64B79E696689FE744B717FFF0FCB88381D252E8.8F8FA60C414"); // '.' is inside
+    }
+
     protected abstract Bytes fromByteArray(byte[] array);
 
     protected abstract Bytes.BuilderStream newBuilder(int size);
-
 }

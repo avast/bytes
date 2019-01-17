@@ -204,8 +204,8 @@ public interface Bytes {
         }
         byte[] result = new byte[length / 2];
         for (int i = 0; i < length; i += 2) {
-            int high = Character.getNumericValue(hexString.charAt(i));
-            int low = Character.getNumericValue(hexString.charAt(i + 1));
+            int high = Constants.hexToBin(hexString.charAt(i));
+            int low = Constants.hexToBin(hexString.charAt(i + 1));
             if (high == -1 || low == -1) {
                 throw new IllegalArgumentException("HexString contains illegal characters: " + hexString);
             }
@@ -213,6 +213,4 @@ public interface Bytes {
         }
         return copyFrom(result);
     }
-
-
 }
