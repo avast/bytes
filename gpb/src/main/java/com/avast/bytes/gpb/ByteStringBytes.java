@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 
 /**
  * Implementation of {@link Bytes} that wraps {@link ByteString}.
- *
+ * <p>
  * The only way how to create an instance is by calling {@link #wrap(ByteString)}.
  * The underlying {@link ByteString} can be accessed directly by calling {@link #underlying()}.
  */
@@ -65,14 +65,23 @@ public final class ByteStringBytes extends AbstractBytes {
 
     /**
      * Returns the {@link ByteString} wrapped by this {@link ByteStringBytes}.
+     *
      * @return {@link ByteString} wrapped by this {@link ByteStringBytes}
      */
     public ByteString underlying() {
         return wrapped;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (o instanceof ByteStringBytes) {
+            return ((ByteStringBytes) o).underlying().equals(this.underlying());
+        } else return super.equals(o);
+    }
+
     /**
      * Wraps an existing instance of {@link ByteString}
+     *
      * @param buf {@link ByteString} to wrap
      * @return new {@link ByteStringBytes} wrapping the specified {@link ByteString}
      */
