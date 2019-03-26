@@ -11,10 +11,10 @@ import java.nio.charset.Charset;
 
 /**
  * Implementation of {@link Bytes} backed by {@link ByteBuffer}.
- *
+ * <p>
  * You create a new instance either by copying an existing {@link ByteBuffer} using {@link #copyFrom(ByteBuffer)}
  * or by calling {@link #newBuilder(int)} and writing the bytes to the {@link java.io.OutputStream}.
- *
+ * <p>
  * Note that the implementation of {@link #toReadOnlyByteBuffer()} does not allocate new buffer,
  * because it just delegates to {@link ByteBuffer#asReadOnlyBuffer()}.
  */
@@ -88,8 +88,16 @@ public final class ByteBufferBytes extends AbstractBytes {
         return new ByteBufferBytes(dest);
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (o instanceof ByteBufferBytes) {
+            return ((ByteBufferBytes) o).buffer.equals(this.buffer);
+        } else return super.equals(o);
+    }
+
     /**
      * Creates new builder with the specified initial capacity (more bytes than this capacity can be written however).
+     *
      * @param initialCapacity initial capacity of the builder
      * @return new builder that will create {@link ByteBufferBytes}.
      */
@@ -100,7 +108,7 @@ public final class ByteBufferBytes extends AbstractBytes {
     /**
      * Completely reads the given stream's bytes into a {@code Bytes}, blocking if necessary until all bytes are
      * read through to the end of the stream.
-     *
+     * <p>
      * Convenient if the size of the input stream is not known (otherwise use {@link #newBuilder(int)} with the known size and copy the data).
      *
      * <b>Performance notes:</b> The returned {@code Bytes} is
