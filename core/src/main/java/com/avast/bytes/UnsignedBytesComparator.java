@@ -5,6 +5,7 @@ package com.avast.bytes;
  * <p>
  * {0} < {-1}
  * 0x00 < 0x80
+ * </p>
  */
 public class UnsignedBytesComparator extends AbstractBytesComparator {
 
