@@ -3,8 +3,8 @@ package com.avast.bytes;
 /**
  * Bytes comparator that orders Bytes as array of unsigned bytes.
  * <p>
- * {0} < {-1}
- * 0x00 < 0x80
+ * {0} &lt; {-1}
+ * 0x00 &lt; 0x80
  * </p>
  */
 public class UnsignedBytesComparator extends AbstractBytesComparator {

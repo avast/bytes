@@ -13,7 +13,7 @@ public abstract class AbstractBytesComparator
     }
 
     /**
-     * @param shorterIsLess Shorter Bytes will be taken as less if true. For example, 0x01 < 0x0102
+     * @param shorterIsLess Shorter Bytes will be taken as less if true. For example, 0x01 &lt; 0x0102
      */
     protected AbstractBytesComparator(boolean shorterIsLess) {
         this.shorterIsLess = shorterIsLess;
