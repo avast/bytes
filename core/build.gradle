@@ -1,5 +1,0 @@
-archivesBaseName = 'bytes-core'
-
-dependencies {
-    testCompile "junit:junit:$junitVersion"
-}

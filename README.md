@@ -1,9 +1,8 @@
 Bytes
 =====
 
-[![Build Status](https://travis-ci.org/avast/bytes.svg?branch=master)](https://travis-ci.org/avast/bytes)
-[ ![Download](https://api.bintray.com/packages/avast/maven/bytes/images/download.svg) ](https://bintray.com/avast/maven/bytes/_latestVersion)
-
+[![Build](https://github.com/avast/bytes/workflows/Build/badge.svg)](https://github.com/avast/bytes/actions?query=workflow:Build)
+[![Version](https://badgen.net/maven/v/maven-central/com.avast.bytes/bytes-core)](https://repo1.maven.org/maven2/com/avast/bytes/)
 
 This library contains an immutable representation of sequence of bytes: `com.avast.bytes.Bytes`.
 
