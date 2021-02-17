@@ -6,6 +6,7 @@ import com.avast.bytes.internal.StreamReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
@@ -84,7 +85,7 @@ public final class ByteBufferBytes extends AbstractBytes {
         source.rewind();
         ByteBuffer dest = ByteBuffer.allocate(source.limit());
         dest.put(source);
-        dest.flip();
+        ((Buffer) dest).flip();
         return new ByteBufferBytes(dest);
     }
 
@@ -183,7 +184,7 @@ public final class ByteBufferBytes extends AbstractBytes {
             // every time we create new view to the underlying buffer up to the current position
             // the buffer can only be appended to or reallocated, which cannot change the existing views
             ByteBuffer wrapped = buffer.asReadOnlyBuffer();
-            wrapped.flip();
+            ((Buffer) wrapped).flip();
             return new ByteBufferBytes(wrapped);
         }
 
@@ -218,7 +219,7 @@ public final class ByteBufferBytes extends AbstractBytes {
             }
 
             ByteBuffer newBuffer = ByteBuffer.allocate(newCapacity);
-            buffer.flip();
+            ((Buffer) buffer).flip();
             newBuffer.put(buffer);
             buffer = newBuffer;
         }
