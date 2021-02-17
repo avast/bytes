@@ -82,7 +82,7 @@ public final class ByteBufferBytes extends AbstractBytes {
 
     public static ByteBufferBytes copyFrom(final ByteBuffer bytes) {
         ByteBuffer source = bytes.asReadOnlyBuffer();
-        source.rewind();
+        ((Buffer) source).rewind();
         ByteBuffer dest = ByteBuffer.allocate(source.limit());
         dest.put(source);
         ((Buffer) dest).flip();
