@@ -50,5 +50,7 @@ lazy val gpbv3 = project
   .settings(commonSettings)
   .settings(
     name := "bytes-gpb-v3",
-    libraryDependencies += "com.google.protobuf" % "protobuf-java" % "3.15.0"
+    libraryDependencies += "com.google.protobuf" % "protobuf-java" % "3.15.0",
+    Compile / unmanagedSourceDirectories += (ThisBuild / baseDirectory).value / "gpb" / "src" / "main" / "java",
+    Test / unmanagedSourceDirectories += (ThisBuild / baseDirectory).value / "gpb" / "src" / "test" / "java"
   )
