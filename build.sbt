@@ -23,7 +23,7 @@ lazy val commonSettings = List(
 
 lazy val root = project
   .in(file("."))
-  .aggregate(core, gpb)
+  .aggregate(core, gpb, gpbv3)
   .settings(commonSettings)
   .settings(
     name := "bytes",
@@ -42,4 +42,13 @@ lazy val gpb = project
   .settings(
     name := "bytes-gpb",
     libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
+  )
+
+lazy val gpbv3 = project
+  .in(file("gpb-v3"))
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(
+    name := "bytes-gpb-v3",
+    libraryDependencies += "com.google.protobuf" % "protobuf-java" % "3.15.0"
   )
